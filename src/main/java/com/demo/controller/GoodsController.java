@@ -1,0 +1,61 @@
+package com.demo.controller;
+
+import com.dangdang.ddframe.rdb.sharding.keygen.KeyGenerator;
+import com.demo.entity.Goods;
+import com.demo.repository.GoodsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @ClassName:
+ * @Description:
+ * @author: baoguangyu
+ * @date: 2020-09-01 09:27
+ * @version: 1.0
+ */
+@RestController
+public class GoodsController {
+
+    @Autowired
+    private KeyGenerator keyGenerator;
+
+    @Autowired
+    private GoodsRepository goodsRepository;
+
+    @GetMapping("save")
+    public String save(){
+        for(int i= 1 ; i <= 40 ; i ++){
+            Goods goods = new Goods();
+            goods.setGoodsId((long) i);
+            goods.setGoodsName( "shangpin" + i);
+            goods.setGoodsType((long) (i+1));
+            goodsRepository.save(goods);
+        }
+        return "success";
+    }
+
+    @GetMapping("select")
+    public String select(){
+        return goodsRepository.findAll().toString();
+    }
+
+    @GetMapping("delete")
+    public void delete(){
+        goodsRepository.deleteAll();
+    }
+
+    @GetMapping("query2")
+    public Object query2(){
+        List<Long> goodsIds = new ArrayList<>();
+        goodsIds.add(10L);
+        goodsIds.add(15L);
+        goodsIds.add(20L);
+        goodsIds.add(25L);
+        return goodsRepository.findAllByGoodsIdIn(goodsIds);
+    }
+
+}
